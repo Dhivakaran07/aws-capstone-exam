@@ -1,0 +1,27 @@
+---
+- name: Configure Web Servers and Deploy App
+  hosts: web
+  become: yes
+
+  tasks:
+    - name: Install Apache and PHP
+      yum:
+        name:
+          - httpd
+          - php
+          - php-mysqlnd
+        state: present
+
+    - name: Start and Enable Apache
+      service:
+        name: httpd
+        state: started
+        enabled: yes
+
+    - name: Deploy Application
+      copy:
+        src: ../app/
+        dest: /var/www/html/
+        owner: apache
+        group: apache
+        mode: "0755"
